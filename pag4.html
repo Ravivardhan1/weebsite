@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Solar Panels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #87CEEB, #F5F5F5);
+      font-family: 'Open Sans', sans-serif;
+      line-height: 1.6;
+    }
+    .container-fluid {
+      padding: 20px;
+    }
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #FFC107;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #FFC107;
+      margin-bottom: 1.5rem;
+    }
+    .table {
+      background-color: #fff;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    .table thead {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+    .table th {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .table td {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    ul {
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+    ul strong {
+      font-weight: 600;
+    }
+    .img-fluid {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .img-fluid:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    /* Enhanced Pagination Styles */
+    .pagination-container {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .pagination {
+      margin: 0;
+      padding: 0;
+    }
+    .page-item {
+      margin: 0 2px;
+    }
+    .page-link {
+      border: none;
+      padding: 10px 15px;
+      margin: 0 2px;
+      border-radius: 5px;
+      color: #333;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+    .page-link:hover {
+      background: #FFC107;
+      color: #000;
+      transform: translateY(-2px);
+    }
+    .page-item.active .page-link {
+      background: #FFC107;
+      color: #000;
+      font-weight: bold;
+    }
+    .page-item.disabled .page-link {
+      background: #f8f9fa;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+    .page-item:first-child .page-link,
+    .page-item:last-child .page-link {
+      border-radius: 5px;
+    }
+    .pagination-info {
+      margin-top: 10px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.75rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .table th, .table td {
+        font-size: 0.9rem;
+      }
+      .page-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+    }
+    /* Loading Spinner Styles */
+    #pageLoader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .section-loader {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      margin: 10px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .spinner-border {
+      width: 4rem;
+      height: 4rem;
+      color: #FFC107;
+      border-width: 0.25rem;
+    }
+
+    .spinner-text {
+      margin-top: 1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .container {
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .container.loaded {
+      opacity: 1;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      border-radius: 10px;
+    }
+
+    .benefits-section {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    .benefits-section.loaded {
+      opacity: 1;
+    }
+    .benefit-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+      height: 100%;
+    }
+    .benefit-card:hover {
+      transform: translateY(-5px);
+    }
+    .benefit-icon {
+      font-size: 2rem;
+      color: #4CAF50;
+      margin-bottom: 1rem;
+    }
+    .benefit-title {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .benefit-description {
+      color: #666;
+      font-size: 0.95rem;
+    }
+    .savings-calculator {
+      background: #4CAF50;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .savings-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .savings-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    .benefit-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+    .benefit-image:hover {
+      transform: scale(1.05);
+    }
+    .cost-comparison {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .comparison-table th {
+      background: #4CAF50;
+      color: white;
+    }
+    .comparison-table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+    @media (max-width: 768px) {
+      .benefit-image {
+        height: 150px;
+      }
+      .savings-number {
+        font-size: 2rem;
+      }
+    }
+    .solar-phone-section {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      display: block !important;
+      opacity: 1 !important;
+      position: relative;
+    }
+    .section-divider {
+      text-align: center;
+      margin: 40px 0;
+      position: relative;
+    }
+    .section-divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 45%;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #4CAF50);
+    }
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 45%;
+      height: 2px;
+      background: linear-gradient(to left, transparent, #4CAF50);
+    }
+    .section-divider span {
+      background: #fff;
+      padding: 0 20px;
+      color: #4CAF50;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .phone-feature-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+      height: 100%;
+      display: block !important; /* Force display */
+      opacity: 1 !important; /* Force opacity */
+    }
+    .phone-specs {
+      background: #4CAF50;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .spec-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .spec-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    .phone-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+    .phone-image:hover {
+      transform: scale(1.05);
+    }
+    .tech-features {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .tech-feature-list {
+      list-style: none;
+      padding: 0;
+    }
+    .tech-feature-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .tech-feature-list li:last-child {
+      border-bottom: none;
+    }
+    .tech-feature-list i {
+      color: #4CAF50;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Loader -->
+  <div id="pageLoader">
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-text">Loading Product Details...</div>
+    </div>
+  </div>
+
+  <!-- Section Loader -->
+  <div class="section-loader" id="contentLoader">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-text">Loading Product Information...</div>
+  </div>
+
+  <div class="container-fluid mt-5">
+    <h1 class="text-center">Solar Panel Solutions <span class="badge bg-warning">Products</span></h1>
+    <h2 class="text-center">Sustainable Power for EVs</h2>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Description</th>
+            <th>Key Features</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Solar Panels</strong></td>
+            <td>Efficient panels for renewable energy.</td>
+            <td>
+              <ul>
+                <li>High efficiency</li>
+                <li>Durable design</li>
+                <li>Eco-friendly</li>
+              </ul>
+            </td>
+            <td><strong>Rs: 200/panel</strong> <span class="badge bg-success">Best Deal</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-center"><strong>Total (1 panel)</strong></td>
+            <td><strong>Rs: 200</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <p class="h1">Why Choose Us? <span class="badge bg-success">Reasons</span></p>
+    <ul>
+      <li><strong>Efficiency</strong>: Top energy conversion.</li>
+      <li><strong>Durability</strong>: Long-lasting panels.</li>
+      <li><strong>Eco-Friendly</strong>: Green energy solution.</li>
+      <li><strong>Savings</strong>: Cost-effective power.</li>
+    </ul>
+
+    <!-- Enhanced Benefits Section -->
+    <div class="benefits-section">
+      <h2 class="text-center mb-4">Why Choose Solar Energy? <span class="badge bg-success">Smart Choice</span></h2>
+      
+      <!-- Cost Savings Calculator -->
+      <div class="savings-calculator">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="savings-number">70%</div>
+            <div class="savings-label">Average Cost Reduction</div>
+          </div>
+          <div class="col-md-4">
+            <div class="savings-number">25+</div>
+            <div class="savings-label">Years of Savings</div>
+          </div>
+          <div class="col-md-4">
+            <div class="savings-number">₹50,000</div>
+            <div class="savings-label">Annual Savings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Comparison Table -->
+      <div class="cost-comparison mt-4">
+        <h3 class="text-center mb-3">Cost Comparison: Solar vs Traditional Energy</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Energy Source</th>
+              <th>Monthly Cost</th>
+              <th>Annual Cost</th>
+              <th>Environmental Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Solar Energy</td>
+              <td>₹2,500</td>
+              <td>₹30,000</td>
+              <td>Zero Emissions</td>
+            </tr>
+            <tr>
+              <td>Traditional Grid</td>
+              <td>₹8,500</td>
+              <td>₹102,000</td>
+              <td>High Emissions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="benefit-card">
+            <img src="solar saving.jpg" alt="Cost Savings" class="benefit-image">
+            <i class="bi bi-currency-dollar benefit-icon"></i>
+            <h3 class="benefit-title">Significant Cost Savings</h3>
+            <p class="benefit-description">Reduce your electricity bills by up to 70% with solar energy. Our systems typically pay for themselves within 5-7 years through energy savings.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="benefit-card">
+            <img src="environmental.jpg" alt="Environmental Impact" class="benefit-image">
+            <i class="bi bi-tree benefit-icon"></i>
+            <h3 class="benefit-title">Environmental Impact</h3>
+            <p class="benefit-description">Reduce your carbon footprint by switching to clean, renewable energy. Each solar installation prevents tons of CO2 emissions annually.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="benefit-card">
+            <img src="property-value..jpg" alt="Property Value" class="benefit-image">
+            <i class="bi bi-house benefit-icon"></i>
+            <h3 class="benefit-title">Increased Property Value</h3>
+            <p class="benefit-description">Homes with solar installations typically sell for 4.1% more than comparable homes without solar, according to recent studies.</p>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="benefit-card">
+            <img src="energy-independence.jpg" alt="Energy Independence" class="benefit-image">
+            <i class="bi bi-lightning-charge benefit-icon"></i>
+            <h3 class="benefit-title">Energy Independence</h3>
+            <p class="benefit-description">Generate your own electricity and reduce dependency on the grid. Our battery storage solutions ensure power even during outages.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="benefit-card">
+            <img src="government-incentives.jpg" alt="Government Incentives" class="benefit-image">
+            <i class="bi bi-gift benefit-icon"></i>
+            <h3 class="benefit-title">Government Incentives</h3>
+            <p class="benefit-description">Take advantage of tax credits, rebates, and other incentives that can reduce your installation costs by up to 30%.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="benefit-card">
+            <img src="maintenance.jpg" alt="Low Maintenance" class="benefit-image">
+            <i class="bi bi-tools benefit-icon"></i>
+            <h3 class="benefit-title">Low Maintenance</h3>
+            <p class="benefit-description">Our solar panels require minimal maintenance and come with a 25-year warranty. Regular cleaning is the main requirement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+      <span>Featured Innovation</span>
+    </div>
+
+    <!-- Solar Phone Section -->
+    <div class="solar-phone-section">
+      <h2 class="text-center mb-4">Infinix Solar-Chargeable Mobile <span class="badge bg-success">Innovation</span></h2>
+      
+      <!-- Phone Image -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <img src="infnix solar mobile.webp" alt="Infinix Solar Phone" class="phone-image">
+        </div>
+        <div class="col-md-6">
+          <img src="solar charging mobile.webp" alt="Solar Charging Case" class="phone-image">
+        </div>
+      </div>
+
+      <!-- Key Specifications -->
+      <div class="phone-specs">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="spec-number">2W</div>
+            <div class="spec-label">Solar Power Output</div>
+          </div>
+          <div class="col-md-4">
+            <div class="spec-number">24h</div>
+            <div class="spec-label">Battery Life</div>
+          </div>
+          <div class="col-md-4">
+            <div class="spec-number">30%</div>
+            <div class="spec-label">Energy Efficiency</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Features -->
+      <div class="tech-features mt-4">
+        <h3 class="text-center mb-3">SolarEnergy-Reserving Technology</h3>
+        <ul class="tech-feature-list">
+          <li><i class="bi bi-lightning-charge"></i>Perovskite Solar Cells for enhanced efficiency</li>
+          <li><i class="bi bi-sun"></i>Sunflower wireless charging optimization</li>
+          <li><i class="bi bi-thermometer-half"></i>Maximum Power Point Tracking (MPPT)</li>
+          <li><i class="bi bi-battery-charging"></i>Ambient light charging capability</li>
+          <li><i class="bi bi-shield-check"></i>AI-driven power management</li>
+        </ul>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="phone-feature-card">
+            <i class="bi bi-lightning-charge benefit-icon"></i>
+            <h3 class="benefit-title">Solar Charging</h3>
+            <p class="benefit-description">Integrated solar panel generates up to 2 watts of power, providing emergency charging and extended battery life.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="phone-feature-card">
+            <i class="bi bi-battery-charging benefit-icon"></i>
+            <h3 class="benefit-title">Smart Power Management</h3>
+            <p class="benefit-description">AI-powered system optimizes energy capture based on lighting conditions and device positioning.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="phone-feature-card">
+            <i class="bi bi-shield-check benefit-icon"></i>
+            <h3 class="benefit-title">Safety Features</h3>
+            <p class="benefit-description">Advanced thermal management and voltage regulation ensure safe charging in all conditions.</p>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="phone-feature-card">
+            <i class="bi bi-sun benefit-icon"></i>
+            <h3 class="benefit-title">Ambient Light Charging</h3>
+            <p class="benefit-description">Charges efficiently from both sunlight and indoor lighting, making it practical for everyday use.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="phone-feature-card">
+            <i class="bi bi-phone benefit-icon"></i>
+            <h3 class="benefit-title">Dedicated Case</h3>
+            <p class="benefit-description">Optional solar-charging case with discreet contact points for enhanced charging capability.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="phone-feature-card">
+            <i class="bi bi-graph-up benefit-icon"></i>
+            <h3 class="benefit-title">Future-Ready</h3>
+            <p class="benefit-description">Technology platform designed for expansion to wearables and other mobile devices.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Pagination -->
+  <div class="pagination-container">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="pag3.html" aria-label="Previous">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="cap916.html">1</a></li>
+        <li class="page-item"><a class="page-link" href="pag2.html">2</a></li>
+        <li class="page-item"><a class="page-link" href="pag3.html">3</a></li>
+        <li class="page-item active"><a class="page-link" href="pag4.html">4</a></li>
+        <li class="page-item"><a class="page-link" href="pag5.html">5</a></li>
+        <li class="page-item">
+          <a class="page-link" href="pag5.html" aria-label="Next">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="pagination-info">
+      Page 4 of 5
+    </div>
+  </div>
+
+  <script>
+    // Function to simulate content loading
+    function simulateLoading(element, loaderId) {
+      const loader = document.getElementById(loaderId);
+      const randomDelay = Math.random() * 1500 + 1000; // Random delay between 1000-2500ms
+      
+      // Create loading overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'loading-overlay';
+      overlay.innerHTML = `
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      `;
+      element.appendChild(overlay);
+      
+      setTimeout(() => {
+        element.classList.add('loaded');
+        loader.style.display = 'none';
+        overlay.remove();
+      }, randomDelay);
+    }
+
+    // Page load handler
+    window.addEventListener('load', function() {
+      // Show main page loader
+      document.getElementById('pageLoader').style.display = 'flex';
+      
+      // Hide main page loader after delay
+      setTimeout(() => {
+        document.getElementById('pageLoader').style.opacity = '0';
+        
+        // Show section loader
+        document.getElementById('contentLoader').style.display = 'block';
+        
+        // Simulate loading for main container
+        simulateLoading(document.querySelector('.container-fluid'), 'contentLoader');
+        
+        // Remove main loader after fade out
+        setTimeout(() => {
+          document.getElementById('pageLoader').style.display = 'none';
+        }, 500);
+      }, 2000);
+    });
+
+    // Add loading animation for images
+    document.querySelectorAll('img').forEach(img => {
+      img.addEventListener('load', function() {
+        this.classList.add('loaded');
+      });
+    });
+
+    // Load content with delays
+    document.addEventListener('DOMContentLoaded', function() {
+      // Show solar phone section immediately
+      const solarPhoneSection = document.querySelector('.solar-phone-section');
+      if (solarPhoneSection) {
+        solarPhoneSection.style.display = 'block';
+        solarPhoneSection.style.opacity = '1';
+      }
+
+      // Show phone feature cards immediately
+      const phoneFeatureCards = document.querySelectorAll('.phone-feature-card');
+      phoneFeatureCards.forEach(card => {
+        card.style.display = 'block';
+        card.style.opacity = '1';
+      });
+
+      // Load other content with delays
+      simulateLoading(document.querySelector('.container-content'), 500);
+      simulateLoading(document.querySelector('.img-fluid'), 1000);
+      simulateLoading(document.querySelector('.benefits-section'), 1500);
+    });
+  </script>
+</body>
+</html>

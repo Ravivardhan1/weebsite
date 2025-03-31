@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - SolarEV</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #87CEEB, #F5F5F5);
+      font-family: 'Open Sans', sans-serif;
+      line-height: 1.6;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #FFC107;
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+    .form-control {
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    .btn-custom {
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .modal-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .modal-body {
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+    .img-fluid {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .img-fluid:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    /* Enhanced Pagination Styles */
+    .pagination-container {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .pagination {
+      margin: 0;
+      padding: 0;
+    }
+    .page-item {
+      margin: 0 2px;
+    }
+    .page-link {
+      border: none;
+      padding: 10px 15px;
+      margin: 0 2px;
+      border-radius: 5px;
+      color: #333;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+    .page-link:hover {
+      background: #FFC107;
+      color: #000;
+      transform: translateY(-2px);
+    }
+    .page-item.active .page-link {
+      background: #FFC107;
+      color: #000;
+      font-weight: bold;
+    }
+    .page-item.disabled .page-link {
+      background: #f8f9fa;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+    .page-item:first-child .page-link,
+    .page-item:last-child .page-link {
+      border-radius: 5px;
+    }
+    .pagination-info {
+      margin-top: 10px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 1.75rem;
+      }
+      .form-label {
+        font-size: 1rem;
+      }
+      .page-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+    }
+    /* Loading Spinner Styles */
+    #pageLoader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .section-loader {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      margin: 10px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .spinner-border {
+      width: 4rem;
+      height: 4rem;
+      color: #FFC107;
+      border-width: 0.25rem;
+    }
+
+    .spinner-text {
+      margin-top: 1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .container {
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .container.loaded {
+      opacity: 1;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      border-radius: 10px;
+    }
+
+    .img-fluid {
+      opacity: 0;
+      transition: opacity 0.5s ease-in, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .img-fluid.loaded {
+      opacity: 1;
+    }
+
+    .benefits-section {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    .benefits-section.loaded {
+      opacity: 1;
+    }
+    .benefit-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+    .benefit-card:hover {
+      transform: translateY(-5px);
+    }
+    .benefit-icon {
+      font-size: 2rem;
+      color: #4CAF50;
+      margin-bottom: 1rem;
+    }
+    .benefit-title {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .benefit-description {
+      color: #666;
+      font-size: 0.95rem;
+    }
+    .service-highlights {
+      background: #4CAF50;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .highlight-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .highlight-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    @media (max-width: 768px) {
+      h2 { font-size: 1.75rem; }
+      h3 { font-size: 1.25rem; }
+      .page-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div id="pageLoader">
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-text">Loading Contact Form...</div>
+      </div>
+    </div>
+  
+    <!-- Section Loader -->
+    <div class="section-loader" id="contentLoader">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-text">Loading Content...</div>
+    </div>
+  <div class="container mt-5">
+    <h2>Contact Us <span class="badge bg-warning">Reach Out</span></h2>
+    <div class="row">
+      <div class="col-md-6">
+        <form id="contactForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">Feedback</label>
+            <textarea class="form-control" id="message" rows="4" placeholder="Type your message here..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-custom">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #4CAF50; color: #fff;">
+          <h5 class="modal-title" id="successModalLabel">Thank You!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Your feedback has been submitted successfully. We'll get back to you soon!
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Benefits Section -->
+  <div class="benefits-section">
+    <h2 class="text-center mb-4">Why Choose Our Services? <span class="badge bg-success">Premium</span></h2>
+    
+    <!-- Service Highlights -->
+    <div class="service-highlights">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="highlight-number">24/7</div>
+          <div class="highlight-label">Customer Support</div>
+        </div>
+        <div class="col-md-4">
+          <div class="highlight-number">100%</div>
+          <div class="highlight-label">Satisfaction Guaranteed</div>
+        </div>
+        <div class="col-md-4">
+          <div class="highlight-number">5+</div>
+          <div class="highlight-label">Years Experience</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="benefit-card">
+          <i class="bi bi-tools benefit-icon"></i>
+          <h3 class="benefit-title">Professional Installation</h3>
+          <p class="benefit-description">Our certified technicians ensure proper installation and setup of your solar charging system, following all safety standards and best practices.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="benefit-card">
+          <i class="bi bi-shield-check benefit-icon"></i>
+          <h3 class="benefit-title">Warranty Coverage</h3>
+          <p class="benefit-description">Comprehensive warranty coverage on all components, including 25-year performance guarantee on solar panels and 10-year warranty on inverters.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="benefit-card">
+          <i class="bi bi-graph-up benefit-icon"></i>
+          <h3 class="benefit-title">Performance Monitoring</h3>
+          <p class="benefit-description">Regular system monitoring and maintenance to ensure optimal performance and early detection of any potential issues.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="benefit-card">
+          <i class="bi bi-currency-dollar benefit-icon"></i>
+          <h3 class="benefit-title">Flexible Financing</h3>
+          <p class="benefit-description">Multiple financing options available, including low-interest loans and lease-to-own programs to make solar charging accessible.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="benefit-card">
+          <i class="bi bi-lightning-charge benefit-icon"></i>
+          <h3 class="benefit-title">Energy Optimization</h3>
+          <p class="benefit-description">Smart energy management system to optimize charging times and maximize solar power utilization.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="benefit-card">
+          <i class="bi bi-headset benefit-icon"></i>
+          <h3 class="benefit-title">Expert Support</h3>
+          <p class="benefit-description">Dedicated team of solar and EV experts available to answer questions and provide technical assistance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Pagination -->
+  <div class="pagination-container">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="pag4.html" aria-label="Previous">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="cap916.html">1</a></li>
+        <li class="page-item"><a class="page-link" href="pag2.html">2</a></li>
+        <li class="page-item"><a class="page-link" href="pag3.html">3</a></li>
+        <li class="page-item"><a class="page-link" href="pag4.html">4</a></li>
+        <li class="page-item active"><a class="page-link" href="pag5.html">5</a></li>
+        <li class="page-item">
+          <a class="page-link" href="cap916.html" aria-label="Next">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="pagination-info">
+      Page 5 of 5
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const modal = new bootstrap.Modal(document.getElementById('successModal'));
+      modal.show();
+      this.reset();
+    });
+  
+    // Function to simulate content loading
+    function simulateLoading(element, loaderId) {
+      const loader = document.getElementById(loaderId);
+      const randomDelay = Math.random() * 1500 + 1000; // Random delay between 1000-2500ms
+      
+      // Create loading overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'loading-overlay';
+      overlay.innerHTML = `
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      `;
+      element.appendChild(overlay);
+      
+      setTimeout(() => {
+        element.classList.add('loaded');
+        loader.style.display = 'none';
+        overlay.remove();
+      }, randomDelay);
+    }
+
+    // Page load handler
+    window.addEventListener('load', function() {
+      // Show main page loader
+      document.getElementById('pageLoader').style.display = 'flex';
+      
+      // Hide main page loader after delay
+      setTimeout(() => {
+        document.getElementById('pageLoader').style.opacity = '0';
+        
+        // Show section loader
+        document.getElementById('contentLoader').style.display = 'block';
+        
+        // Simulate loading for main container
+        simulateLoading(document.querySelector('.container'), 'contentLoader');
+        
+        // Remove main loader after fade out
+        setTimeout(() => {
+          document.getElementById('pageLoader').style.display = 'none';
+        }, 500);
+      }, 2000);
+    });
+
+    // Add loading animation for images
+    document.querySelectorAll('img').forEach(img => {
+      img.addEventListener('load', function() {
+        this.classList.add('loaded');
+      });
+    });
+
+    // Load content with delays
+    simulateLoading(document.querySelector('.container-content'), 500);
+    simulateLoading(document.querySelector('.img-fluid'), 1000);
+    simulateLoading(document.querySelector('.benefits-section'), 1500);
+    
+    // Load benefit cards with staggered delays
+    const benefitCards = document.querySelectorAll('.benefit-card');
+    benefitCards.forEach((card, index) => {
+      simulateLoading(card, 2000 + (index * 200));
+    });
+  </script>
+</body>
+</html>
